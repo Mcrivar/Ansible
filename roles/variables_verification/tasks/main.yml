@@ -1,0 +1,3 @@
+---
+- import_tasks: input_check.yml
+- import_tasks: list_hosts.yml

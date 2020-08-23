@@ -1,0 +1,5 @@
+- name: show all the matching hosts
+  debug:
+    msg: "{{ item }}"
+  with_inventory_hostnames:
+    - '{{host}}'

@@ -1,0 +1,5 @@
+- name: Fail script if required host and env parameters are missing
+  fail:
+    msg: "You have to add the --extra-vars='host=' or -e 'host='"
+  when: (host is not defined) or (host == "")
+

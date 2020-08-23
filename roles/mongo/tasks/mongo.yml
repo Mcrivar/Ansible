@@ -1,0 +1,64 @@
+---
+- name: Add an Apt signing key
+  command: sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 4B7C549A058F8B6B
+- name: echo time
+  shell: echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+- name: sudo apt-get update
+  shell: sudo apt-get update
+- name: install mongodf
+  apt: pkg=mongodb-org state=present update_cache=yes
+- name: Copy file with owner and permissions
+  copy:
+    src: ../files/mongodb.conf
+    dest: /etc/mongodb.conf
+    owner: mongodb
+    group: mongodb
+    mode: '0644'
+- name: create directory for mongo db
+  become: yes
+  become_method: sudo
+  become_user: root1
+  file:
+    path: /api/mongo/
+    state: directory
+    owner: mongodb
+    group: mongodb
+    mode: 0775
+    recurse: yes
+- name: stop mongod service
+  service:
+    name: mongod
+    state: stopped
+- name: enable mongodb service
+  systemd:
+    name: mongodb
+    enabled: yes
+- name: create directory for mongodb in /var/run
+  file:
+    path: /var/run/mongodb
+    state: directory
+    owner: mongodb
+    group: mongodb
+    mode: 0775
+    recurse: yes
+- name: configure logrotate for mongod
+  become: yes
+  become_method: sudo
+  become_user: root
+  template:
+    src: ../templates/mongo_logrotate.j2
+    dest: /etc/logrotate.d/mongod.conf
+- name: fix mongodb user declaration
+  user:
+    name: mongodb
+    group: mongodb
+    comment: MongoDB user
+- name: start mongodb service
+  become: yes
+  become_method: sudo
+  become_user: root
+  service:
+    name: mongodb
+    state: started
+- name: verify owner of /var/run/mongodb folder
+  command: sudo chown mongodb:mongodb /var/run/mongodb

@@ -1,0 +1,5 @@
+---
+- hosts: "{{ host | default('empty_group') }}"
+  roles:
+    - { name: variables_verification, become: yes, become_method: sudo }
+    - { name: mongo, become: yes, become_method: sudo }
