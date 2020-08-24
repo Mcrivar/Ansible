@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+  - name: configure awscli
+    expect:
+      command: aws configure
+      responses:
+        'Key ID' : '{{key_id}}'
+        'Access Key' : '{{access_key}}'
+        'region name' : '{{region}}'
+        'output format': 'json'

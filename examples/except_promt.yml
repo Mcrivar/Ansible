@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  tasks:
+    - name: syncdb graphite
+      become: yes
+      become_method: sudo
+      expect:
+        echo: yes
+        command: graphite-manage syncdb
+        responses:
+          'create one now': 'yes'
+          'Username' : '{[username}}'
+          'Email' : '{{email}}'
+          'Password' : '{{password}}'
+          'Password /(again/)' : '{{password}}'

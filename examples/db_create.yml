@@ -1,0 +1,7 @@
+---
+- name: create the graphite db
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: "{{user}}"
+    owner: "{{owner}}"
