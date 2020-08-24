@@ -2,14 +2,14 @@
 
 - name: check if directory exists
   file:
-    path: '<path>'
+    path: "{{path}}"
     state: directory
   register: p
 - name: create directory path
   file:
-    path: '<path>'
+    path: "{{path}}"
     state: directory
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{user}}"
+    group: "{{owner}}"
     mode: 0775
   when: p.stat.exists == false
